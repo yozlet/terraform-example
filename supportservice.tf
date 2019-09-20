@@ -8,6 +8,10 @@ terraform {
   }
 }
 
+provider "launchdarkly" {
+
+}
+
 resource "launchdarkly_project" "yoz-terraform-project" {
     key     = "yozterraform"
     name    = "Yoz's Terraform Project"
