@@ -27,40 +27,75 @@ resource "launchdarkly_project" "demo" {
     ]
 }
 
-// resource "launchdarkly_environment" "demo" {
-//   for_each    = toset(data.github_team.dev_advocates.members)
-//   key         = "${each.value}-dev"
-//   name        = "${each.value} Dev"
-//   color       = substr(md5(each.value), 0, 6)
-//   project_key = launchdarkly_project.demo.key
-// }
+resource "launchdarkly_environment" "demo" {
+  for_each    = toset(data.github_team.dev_advocates.members)
+  key         = "${each.value}-dev"
+  name        = "${each.value} Dev"
+  color       = substr(md5(each.value), 0, 6)
+  project_key = launchdarkly_project.demo.key
+}
 
-// resource "launchdarkly_environment" "yoz-terraform-env" {
-//     name    = "Yoz's Demo"
-//     key     = "yoz-demo"
-//     color   = "417505"
+resource "launchdarkly_environment" "yoz-terraform-env" {
+    name    = "Yoz's Demo"
+    key     = "yoz-demo"
+    color   = "417505"
 
-//     project_key = launchdarkly_project.demo.key
+    project_key = launchdarkly_project.demo.key
 
-//     lifecycle {
-//         ignore_changes = all
-//     }
-// }
+    lifecycle {
+        ignore_changes = all
+    }
+}
 
-// resource "launchdarkly_feature_flag" "yoz-test-flag" {
-//     project_key = launchdarkly_project.demo.key
-//     key         = "yoztestflag"
-//     name        = "Yoz's Test Flag"
-//     variation_type = "boolean"
-// }
+resource "launchdarkly_feature_flag" "building_materials" {
+  project_key    = launchdarkly_project.demo.key
+  key            = "number"
+  name           = "Awesome number flag"
+  variation_type = "string"
+  variations {
+    value       = "straw"
+    name        = "Straw"
+    description = "Watch out for wind"
+  }
+  variations {
+    value       = "sticks"
+    name        = "Sticks"
+    description = "Sturdier than straw"
+  }
+  variations {
+    value       = "bricks"
+    name        = "Bricks"
+    description = "The strongest variation"
+  }
+}
 
-// resource "launchdarkly_segment" "example" {
-//   key         = "example-segment-key"
-//   project_key = launchdarkly_project.demo.key
-//   env_key     = launchdarkly_environment.yoz-terraform-env.key
-//   name        = "example segment"
-//   description = "This segment is managed by Terraform"
-//   tags        = ["segment-tag-1", "segment-tag-2"]
-//   included    = ["user1", "user2"]
-//   excluded    = ["user3", "user4"]
-// }
+resource "launchdarkly_feature_flag_environment" "targeted_rollout" {
+  for_each          = toset(data.github_team.dev_advocates.members)
+  flag_id           = launchdarkly_feature_flag.building_materials.id
+  env_key           = launchdarkly_environment.demo[each.value].key
+  targeting_enabled = false
+
+  user_targets {
+    values = ["user0"]
+  }
+  user_targets {
+    values = ["user1", "user2"]
+  }
+  user_targets {
+    values = []
+  }
+
+  rules {
+    clauses {
+      attribute = "country"
+      op        = "startsWith"
+      values    = ["aus", "de", "united"]
+      negate    = false
+    }
+    variation = 0
+  }
+
+  flag_fallthrough {
+    rollout_weights = [60000, 40000, 0]
+  }
+}
