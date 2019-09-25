@@ -36,8 +36,8 @@ resource "launchdarkly_environment" "demo" {
 }
 
 resource "launchdarkly_environment" "yoz-terraform-env" {
-    name    = "Production"
-    key     = "production"
+    name    = "Yoz's Demo"
+    key     = "yoz-demo"
     color   = "417505"
 
     project_key = launchdarkly_project.demo.key
