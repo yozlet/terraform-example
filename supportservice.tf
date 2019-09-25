@@ -19,8 +19,8 @@ data "github_team" "dev_advocates" {
 provider "launchdarkly" {}
 
 resource "launchdarkly_project" "demo" {
-    key     = "yozterraform"
-    name    = "Yoz's Terraform Project"
+    key     = "tfdemo"
+    name    = "Terraform Demo Project"
 
     tags = [
         "terraform",
