@@ -99,12 +99,12 @@ resource "launchdarkly_feature_flag_environment" "targeted_rollout" {
       attribute = "email"
       op        = "endsWith"
       values    = ["@launchdarkly.com"]
-      negate    = false
+      negate    = true
     }
     variation = 2
   }
 
   flag_fallthrough {
-    rollout_weights = [60000, 40000, 0]
+    rollout_weights = [90000, 10000, 0]
   }
 }
