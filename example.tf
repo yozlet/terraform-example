@@ -58,6 +58,7 @@ resource "launchdarkly_feature_flag" "building_materials" {
     name        = "Bricks"
     description = "The strongest variation"
   }
+  tags = ["terraform", "all-hands", "demo", "multivariate"]
 }
 
 # Update the targeting rules for each engineer's environment
@@ -99,5 +100,4 @@ resource "launchdarkly_feature_flag_environment" "targeted_rollout" {
   flag_fallthrough {
     rollout_weights = [60000, 40000, 0]
   }
-  tags = ["terraform", "all-hands", "demo", "multivariate"]
 }
