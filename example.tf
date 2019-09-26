@@ -73,7 +73,7 @@ resource "launchdarkly_feature_flag_environment" "targeted_rollout" {
   for_each          = toset(data.github_team.dev_advocates.members)
   flag_id           = launchdarkly_feature_flag.building_materials.id
   env_key           = launchdarkly_environment.demo[each.value].key
-  targeting_enabled = true
+  targeting_enabled = false
 
   user_targets {
     values = ["user0"]
