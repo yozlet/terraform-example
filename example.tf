@@ -94,6 +94,6 @@ resource "launchdarkly_feature_flag_environment" "targeted_rollout" {
   }
 
   flag_fallthrough {
-    rollout_weights = [20000, 40000, 0]
+    rollout_weights = [60000, 40000, 0]
   }
 }
