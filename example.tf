@@ -23,10 +23,23 @@ resource "launchdarkly_environment" "demo" {
   project_key = launchdarkly_project.demo.key
 }
 
+resource "launchdarkly_feature_flag" "kill_switch" {
+  project_key    = launchdarkly_project.demo.key
+  key            = "killswitch"
+  name           = "Kill Switch 🧟"
+  variation_type = "boolean"
+  variations {
+    value = false
+  }
+  variations {
+    value = true
+  }
+}
+
 resource "launchdarkly_feature_flag" "building_materials" {
   project_key    = launchdarkly_project.demo.key
   key            = "building-materials"
-  name           = "Awesome number flag"
+  name           = "Building Materials 🏗"
   variation_type = "string"
   variations {
     value       = "straw"
