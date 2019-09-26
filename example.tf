@@ -30,7 +30,7 @@ resource "launchdarkly_project" "demo" {
 resource "launchdarkly_environment" "demo" {
   for_each    = toset(data.github_team.dev_advocates.members)
   key         = "${each.value}-dev"
-  name        = "${each.value} Dev"
+  name        = "${title(each.value)} Dev"
   color       = substr(md5(each.value), 0, 6)
   project_key = launchdarkly_project.demo.key
 }
