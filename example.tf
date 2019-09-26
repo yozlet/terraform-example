@@ -3,7 +3,7 @@ provider "github" {
 }
 
 data "github_team" "dev_advocates" {
-  slug = "dev-advocates"
+  slug = "solutions-engineers"
 }
 
 resource "launchdarkly_project" "demo" {
