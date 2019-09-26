@@ -19,12 +19,12 @@ data "github_team" "dev_advocates" {
 provider "launchdarkly" {}
 
 resource "launchdarkly_project" "demo" {
-    key     = "tfdemo"
-    name    = "Terraform Demo Project"
+  key  = "tfdemo"
+  name = "Terraform Demo Project"
 
-    tags = [
-        "terraform",
-    ]
+  tags = [
+    "terraform",
+  ]
 }
 
 resource "launchdarkly_environment" "demo" {
@@ -36,15 +36,15 @@ resource "launchdarkly_environment" "demo" {
 }
 
 resource "launchdarkly_environment" "yoz-terraform-env" {
-    name    = "Yoz's Demo"
-    key     = "yoz-demo"
-    color   = "417505"
+  name  = "Yoz's Demo"
+  key   = "yoz-demo"
+  color = "417505"
 
-    project_key = launchdarkly_project.demo.key
+  project_key = launchdarkly_project.demo.key
 
-    lifecycle {
-        ignore_changes = all
-    }
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "launchdarkly_feature_flag" "building_materials" {
@@ -73,7 +73,7 @@ resource "launchdarkly_feature_flag_environment" "targeted_rollout" {
   for_each          = toset(data.github_team.dev_advocates.members)
   flag_id           = launchdarkly_feature_flag.building_materials.id
   env_key           = launchdarkly_environment.demo[each.value].key
-  targeting_enabled = false
+  targeting_enabled = true
 
   user_targets {
     values = ["user0"]
@@ -93,6 +93,15 @@ resource "launchdarkly_feature_flag_environment" "targeted_rollout" {
       negate    = false
     }
     variation = 0
+  }
+  rules {
+    clauses {
+      attribute = "email"
+      op        = "endsWith"
+      values    = ["@launchdarkly.com"]
+      negate    = false
+    }
+    variation = 2
   }
 
   flag_fallthrough {
