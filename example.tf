@@ -2,7 +2,7 @@ provider "github" {
   organization = "launchdarkly"
 }
 
-data "github_team" "dev_advocates" {
+data "github_team" "solutions_engineers" {
   slug = "solutions-engineers"
 }
 
@@ -16,7 +16,7 @@ resource "launchdarkly_project" "demo" {
 }
 
 resource "launchdarkly_environment" "demo" {
-  for_each    = toset(data.github_team.dev_advocates.members)
+  for_each    = toset(data.github_team.solutions_engineers.members)
   key         = "${each.value}-dev"
   name        = "${title(each.value)} Dev"
   color       = substr(md5(each.value), 0, 6)
@@ -59,7 +59,7 @@ resource "launchdarkly_feature_flag" "building_materials" {
 }
 
 resource "launchdarkly_feature_flag_environment" "targeted_rollout" {
-  for_each          = toset(data.github_team.dev_advocates.members)
+  for_each          = toset(data.github_team.solutions_engineers.members)
   flag_id           = launchdarkly_feature_flag.building_materials.id
   env_key           = launchdarkly_environment.demo[each.value].key
   targeting_enabled = true
