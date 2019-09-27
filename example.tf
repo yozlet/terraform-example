@@ -85,7 +85,7 @@ resource "launchdarkly_feature_flag_environment" "targeted_rollout" {
       values    = ["aus", "de", "united"]
       negate    = false
     }
-    variation = 0
+    variation = 1
   }
   rules {
     clauses {
@@ -98,6 +98,6 @@ resource "launchdarkly_feature_flag_environment" "targeted_rollout" {
   }
 
   flag_fallthrough {
-    rollout_weights = [60000, 40000, 0]
+    rollout_weights = [70000, 30000, 0]
   }
 }
