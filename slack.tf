@@ -13,7 +13,7 @@ resource "launchdarkly_feature_flag" "unfurl_links" {
   name        = "Unfurl Links"
   key         = "unfurl-links"
   description = "whether or not to unfurl links"
-  maintainer_id = "yoz@launchdarkly.com"
+  maintainer_id = "hbarrow+tfdemo@launchdarkly.com"
 
   variation_type = "boolean"
   variations {
